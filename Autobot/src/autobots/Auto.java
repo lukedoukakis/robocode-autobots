@@ -7,6 +7,7 @@ import robocode.Robot;
 
 public class Auto extends Robot {
 
+	//RADIANS!
     private double targetDir;
     private boolean trackingFlag = false;
 
