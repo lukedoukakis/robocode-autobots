@@ -68,7 +68,7 @@ public class Auto extends Robot {
     }
 /** Returns whether if the current gun heading is within 1 degree of the target
 */
-    private boolean closeEnough() {
+    private boolean closeEnough(double deviation) {
 	return Math.abs(targetDir - this.getGunHeading()) <= 1;
     }
 
