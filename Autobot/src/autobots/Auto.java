@@ -76,7 +76,7 @@ public class Auto extends Robot {
 //TODO: Save coords as (x,y), convert to and from
     @Override
     public void onScannedRobot(ScannedRobotEvent event) {
-	//Use event.getHeading()
+	//Predict position w/ heading and velocity and distance
 	    targetDir = getHeading() + event.getBearing();
 	targetDir = fixToHeading(targetDir);
 	trackingFlag = true;
