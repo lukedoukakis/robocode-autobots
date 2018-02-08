@@ -72,7 +72,7 @@ public class Auto extends Robot {
     private boolean closeEnough(double deviation) {
 	return Math.abs(targetDir - this.getGunHeading()) <= 1;
     }
-
+//TODO: Save coords as (x,y), convert to and from
     @Override
     public void onScannedRobot(ScannedRobotEvent event) {
 	//Use event.getHeading()
