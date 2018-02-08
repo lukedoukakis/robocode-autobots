@@ -32,7 +32,8 @@ public class Auto extends Robot {
 		turnGunRight(1);
 	    }
 	} else {
-	    ahead(1);
+	    //TODO: SERPENTINE!
+		ahead(1);
 //Maybe we should not have the gun idly rotate
 	    if (this.getGunHeading() >= 359) {
 		turnGunLeftFlag = true;
