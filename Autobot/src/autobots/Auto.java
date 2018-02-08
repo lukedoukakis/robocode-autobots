@@ -73,7 +73,8 @@ public class Auto extends Robot {
 
     @Override
     public void onScannedRobot(ScannedRobotEvent event) {
-	targetDir = getHeading() + event.getBearing();
+	//Use event.getHeading()
+	    targetDir = getHeading() + event.getBearing();
 	targetDir = fixToHeading(targetDir);
 	trackingFlag = true;
     }
