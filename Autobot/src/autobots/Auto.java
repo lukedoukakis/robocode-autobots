@@ -15,6 +15,7 @@ public class Auto extends Robot {
     @Override
     public void run() {
 	init();
+	    //getEnergy >0
 	while (true) {
 	    update();
 	}
