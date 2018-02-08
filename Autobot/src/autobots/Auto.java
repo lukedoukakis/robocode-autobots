@@ -33,7 +33,7 @@ public class Auto extends Robot {
 	    }
 	} else {
 	    ahead(1);
-
+//Maybe we should not have the gun idly rotate
 	    if (this.getGunHeading() >= 359) {
 		turnGunLeftFlag = true;
 	    }
@@ -65,7 +65,8 @@ public class Auto extends Robot {
 	setAdjustRadarForGunTurn(true);
 	setAdjustRadarForRobotTurn(true);
     }
-
+/** Returns whether if the current gun heading is within 1 degree of the target
+*/
     private boolean closeEnough() {
 	return Math.abs(targetDir - this.getGunHeading()) <= 1;
     }
@@ -76,7 +77,8 @@ public class Auto extends Robot {
 	targetDir = fixToHeading(targetDir);
 	trackingFlag = true;
     }
-
+/** Returns a value between 0 (inclusive) and 360 (exclusive)
+*/
     public static double fixToHeading(double val) {
 	double toRet = val;
 	while (toRet >= 360) {
