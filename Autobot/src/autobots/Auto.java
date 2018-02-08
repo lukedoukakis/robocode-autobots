@@ -1,66 +1,34 @@
 package autobots;
 
-import java.awt.*;
-
 import robocode.*;
-import robocode.Robot;
+import robocode.util.Utils;
 
 public class Auto extends Robot {
 
-	//RADIANS!
-    private double targetDir;
-    private boolean trackingFlag = false;
+    private static final double radarSpeed = 7.5;
 
-    private boolean turnGunLeftFlag = false, turnRadarLeftFlag = false;
+    private static int shortestTurnRoute(final double current, final double target) {
 
-    @Override
-    public void run() {
-	init();
-	    //getEnergy >0
-	while (true) {
-	    update();
+	if (current > target) {
+	    return -1;
+	} else if (target > current) {
+	    return 1;
+	} else {
+	    return 0;
 	}
     }
 
-    private void update() {
+    private TargetDetails target;
 
-	if (trackingFlag) {
-	    if (closeEnough()) {
-		fire(3);
-	    }
-	    if (targetDir < getGunHeading()) {
-		turnGunLeft(1);
-	    } else if (targetDir > getGunHeading()) {
-		turnGunRight(1);
-	    }
-	} else {
-	    //TODO: SERPENTINE!
-		ahead(1);
-//Maybe we should not have the gun idly rotate
-	    if (this.getGunHeading() >= 359) {
-		turnGunLeftFlag = true;
-	    }
-	    if (this.getGunHeading() <= 0) {
-		turnGunLeftFlag = false;
-	    }
-	    if (!turnGunLeftFlag) {
-		turnGunRight(5);
-	    } else {
-		turnGunLeft(5);
-	    }
+    private boolean trackingFlag = false;
 
-	    if (this.getRadarHeading() >= 359) {
-		turnRadarLeftFlag = true;
-	    }
-	    if (this.getRadarHeading() <= 0) {
-		turnRadarLeftFlag = false;
-	    }
-	    if (!turnRadarLeftFlag) {
-		turnRadarRight(5);
-	    } else {
-		turnRadarLeft(5);
-	    }
-	}
+    private boolean turnRadarLeftFlag = false;
+
+    /**
+     * Returns whether if the current gun heading is within 1 degree of the target
+     */
+    private boolean closeEnough(final double currentHeading, final double deviation) {
+	return Math.abs(Utils.normalAbsoluteAngleDegrees(currentHeading) - getGunHeading()) <= deviation;
     }
 
     private void init() {
@@ -68,37 +36,54 @@ public class Auto extends Robot {
 	setAdjustRadarForGunTurn(true);
 	setAdjustRadarForRobotTurn(true);
     }
-/** Returns whether if the current gun heading is within 1 degree of the target
-*/
-    private boolean closeEnough(double deviation) {
-	return Math.abs(targetDir - this.getGunHeading()) <= 1;
-    }
-//TODO: Save coords as (x,y), convert to and from
+
     @Override
-    public void onScannedRobot(ScannedRobotEvent event) {
-	//Predict position w/ heading and velocity and distance
-	    targetDir = getHeading() + event.getBearing();
-	targetDir = fixToHeading(targetDir);
+    public void onScannedRobot(final ScannedRobotEvent event) {
+	target = new TargetDetails(event, this);
 	trackingFlag = true;
     }
-/** Returns a value between 0 (inclusive) and 360 (exclusive)
-*/
-    public static double fixToHeading(double val) {
-	double toRet = val;
-	while (toRet >= 360) {
-	    toRet -= 360;
-	}
-	while (toRet < 0) {
-	    toRet += 360;
-	}
-	return toRet;
+
+    @Override
+    public void run() {
+	init();
+
+	do {
+	    update();
+	} while (getEnergy() > 0);
     }
 
-    @SuppressWarnings("boxing")
-    @Override
-    public void onPaint(Graphics2D g) {
-	g.setColor(Color.red);
-	g.drawString(String.format("%.2f", targetDir), (int) this.getX(), (int) this.getY() + 10);
-	g.drawString(String.format("%.2f", getGunHeading()), (int) this.getX(), (int) this.getY() + 20);
+    private void update() {
+
+	if (trackingFlag) {
+	    // Gets angle to target 0 to 360
+	    double targetDir = target.getAbsoluteHeadingDegreesFrom(getX(), getY());
+	    // Calc optimal speed
+	    double gunSpeed = Math.min(Math.abs(getGunHeading() - targetDir), Rules.GUN_TURN_RATE);
+
+	    out.println("Target Direction: " + targetDir + "\nGun turn speed: " + gunSpeed + "\n" + target.toString());
+
+	    if (closeEnough(targetDir, 2.5) && (getGunHeat() == 0)) {
+		fire(2);
+	    }
+
+	    turnGunRight(shortestTurnRoute(getGunHeading(), targetDir) * gunSpeed);
+
+	}
+	// TODO: SERPENTINE!
+	ahead(1);
+
+	if (getRadarHeading() >= 359) {
+	    turnRadarLeftFlag = true;
+	}
+	if (getRadarHeading() <= 0) {
+	    turnRadarLeftFlag = false;
+	}
+	if (!turnRadarLeftFlag) {
+	    turnRadarRight(radarSpeed);
+	} else {
+	    turnRadarLeft(radarSpeed);
+	}
+
     }
+
 }
