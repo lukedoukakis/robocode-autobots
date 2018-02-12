@@ -36,6 +36,40 @@ public class Auto extends Robot {
 	setAdjustRadarForGunTurn(true);
 	setAdjustRadarForRobotTurn(true);
     }
+	
+    public void navigate(double x, double y){ //movement, prefers toward center
+			
+	double heading;
+	heading=getHeading();
+			
+	Random r = new Random();
+
+	if(getX()<x/2 && getY()<y/2){//if west and south
+		turnRight(Math.abs(45-(heading+ r.nextInt(10)-5)));
+	}
+	if(getX()<x/2 && getY()>y/2){//if west and north
+		turnRight(Math.abs(135-(heading+ r.nextInt(10)-5)));
+	}
+	if(getX()>x/2 && getY()>y/2){//if east and north
+		turnLeft(Math.abs(225-(heading+ r.nextInt(10)-5)));
+	}
+	if(getX()>x/2 && getY()<y/2){//if east and south
+		turnLeft(Math.abs(315-(heading+ r.nextInt(10)-5)));
+	}
+	ahead(200);
+    }
+	
+	
+    public void navigateSerpentine(){ //probably useless, but this is some basic serpentine movement
+	for(int i=0;i<6;i++){
+		ahead(10);
+		turnRight(10);
+	}
+	for(int i=0;i<6;i++){
+		ahead(10);
+		turnLeft(10);
+	}
+}
 
     @Override
     public void onScannedRobot(final ScannedRobotEvent event) {
@@ -69,7 +103,7 @@ public class Auto extends Robot {
 	    turnGunRight(shortestTurnRoute(getGunHeading(), targetDir) * gunSpeed);
 
 	}
-	// TODO: SERPENTINE!
+	
 	ahead(1);
 
 	if (getRadarHeading() >= 359) {
