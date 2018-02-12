@@ -37,8 +37,10 @@ public class Auto extends Robot {
 	setAdjustRadarForRobotTurn(true);
     }
 	
-    public void navigate(double x, double y){ //movement, prefers toward center
-			
+    public void navigate(){ //movement, tends to avoid the edges of the battlefield
+	
+	double x = getBattleFieldWidth();
+	double y = getBattleFieldHeight();
 	double heading;
 	heading=getHeading();
 			
