@@ -17,8 +17,8 @@ public class Auto extends Robot {
 	    return 0;
 	}
     }
-
-    private TargetDetails target;
+//Tracks 5-7 targets
+    private ArrayList<TargetDetails> target;
 
     private boolean trackingFlag = false;
 
