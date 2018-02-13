@@ -41,8 +41,7 @@ public class Auto extends Robot {
 	
 	double x = getBattleFieldWidth();
 	double y = getBattleFieldHeight();
-	double heading;
-	heading=getHeading();
+	double heading=getHeading();
 			
 	Random r = new Random();
 
@@ -107,7 +106,7 @@ public class Auto extends Robot {
 	}
 	
 	ahead(1);
-
+//Set radar to a wobbly path (recenter on every scan)
 	if (getRadarHeading() >= 359) {
 	    turnRadarLeftFlag = true;
 	}
