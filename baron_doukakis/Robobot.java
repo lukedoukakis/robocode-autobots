@@ -2,6 +2,7 @@ package baron_doukakis;
 
 import robocode.*;
 import robocode.util.Utils;
+import java.awt.Color;
 
 //import java.awt.Color;
 
@@ -15,6 +16,8 @@ public class Robobot extends Robot
 	
 	public void run() {
 	
+		setColors(Color.blue,Color.blue,Color.red); // body,gun,radar
+	
 		setAdjustRadarForGunTurn(false);
 		alignGuntoDirection(getRadarHeading());
 		if(getX() != getBattleFieldWidth()){
@@ -27,7 +30,7 @@ public class Robobot extends Robot
 		}
 	
 		while(true){
-			navigateWalls();
+			navigateSides();
 		}
 	}
 
@@ -51,43 +54,8 @@ public class Robobot extends Robot
 			
 	}
 	
-	 public void navigate() { // movement, tends to avoid the edges of the battlefield
 
-		final double x = getBattleFieldWidth();
-		final double y = getBattleFieldHeight();
-		final double heading = getHeading();
-		final double midX = x / 2;
-		final double midY = y / 2;
-		final double randHeading = (heading + (Math.random() * 10)) - 5; // The randomized part of the heading
-		double var = 0.00;
-		
-		if ((getX() < midX) && (getY() < midY)) {// if west and south
-	   		var = Math.abs(45 - randHeading);
-			turnRight(var);
-			
-		}
-		if ((getX() < midX) && (getY() > midY)) {// if west and north
-			var = Math.abs(135 - randHeading);    	
-			turnRight(var);
-			
-		}
-		if ((getX() > midX) && (getY() > midY)) {// if east and north
-	    	var = Math.abs(225 - randHeading);
-			turnLeft(var);
-			
-			
-		}
-		if ((getX() > midX) && (getY() < midY)) {// if east and south
-	    	var = Math.abs(315 - randHeading);
-			turnLeft(var);
-			
-			
-		}
-		ahead(200);
-    }
-	
-
-	public void navigateWalls(){
+	public void navigateSides(){
 		double x = getBattleFieldWidth();
 		double y = getBattleFieldHeight();
 		
