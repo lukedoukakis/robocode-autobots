@@ -15,11 +15,19 @@ public class Robobot extends Robot
 	
 	public void run() {
 	
-	alignGuntoDirection(getRadarHeading());
+		setAdjustRadarForGunTurn(false);
+		alignGuntoDirection(getRadarHeading());
+		if(getX() != getBattleFieldWidth()){
+			alignRobottoDirection(270);
+			ahead(getBattleFieldWidth()-getX());
+		}
+		if(getY() != getBattleFieldHeight()){
+			alignRobottoDirection(180);
+			ahead(getBattleFieldHeight()-getY());
+		}
 	
-	while(true){
-			navigate();
-			scan();
+		while(true){
+			navigateWalls();
 		}
 	}
 
@@ -29,11 +37,6 @@ public class Robobot extends Robot
 
 	public void onScannedRobot(ScannedRobotEvent e) {
 		
-		double scannedHeading = getRadarHeading();
-		stop();
-		//alignGuntoDirection(scannedHeading);
-		
-		turnGunRight(scannedHeading-getGunHeading());
 		if(e.getDistance() < 100){
 			fire(Rules.MAX_BULLET_POWER);
 		}
@@ -44,7 +47,7 @@ public class Robobot extends Robot
 		if(e.getDistance() > 200){
 			fire(1);
 		}
-		resume();
+		
 			
 	}
 	
@@ -53,14 +56,11 @@ public class Robobot extends Robot
 		final double x = getBattleFieldWidth();
 		final double y = getBattleFieldHeight();
 		final double heading = getHeading();
-		double var = 0.00;
-
-
-		// Secondary variables.
 		final double midX = x / 2;
 		final double midY = y / 2;
 		final double randHeading = (heading + (Math.random() * 10)) - 5; // The randomized part of the heading
-
+		double var = 0.00;
+		
 		if ((getX() < midX) && (getY() < midY)) {// if west and south
 	   		var = Math.abs(45 - randHeading);
 			turnRight(var);
@@ -86,6 +86,26 @@ public class Robobot extends Robot
 		ahead(200);
     }
 	
+
+	public void navigateWalls(){
+		double x = getBattleFieldWidth();
+		double y = getBattleFieldHeight();
+		
+		turnRight(90);
+		alignGuntoDirection(getHeading()+90);
+		
+		if(Math.abs(getX()-x) < 10){
+			ahead(y);
+		}
+		if(Math.abs(getX()-x) >= 10){
+			ahead(x);
+		}
+	}
+		
+				
+
+	
+	
 	public void scan(){
 		for(int i = 0; i < 10; i++){
 			turnRadarLeft(36);
@@ -105,6 +125,22 @@ public class Robobot extends Robot
 		}
 		if(var<0 && var > -180){
 			turnGunLeft(Math.abs(var));
+		}
+	}
+	
+	public void alignRobottoDirection(double direction){
+		double var = direction-getHeading();
+		if(var >= 180){
+			turnLeft(var);
+		}
+		if(var >= 0 && var < 180){
+			turnRight(var);
+		}
+		if(var<=-180){
+			turnRight(360-getGunHeading()+direction);
+		}
+		if(var<0 && var > -180){
+			turnLeft(Math.abs(var));
 		}
 	}
 
