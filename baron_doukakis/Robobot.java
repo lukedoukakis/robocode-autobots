@@ -1,10 +1,7 @@
 package baron_doukakis;
 
 import robocode.*;
-import robocode.util.Utils;
 import java.awt.Color;
-
-//import java.awt.Color;
 
 // API help : http://robocode.sourceforge.net/docs/robocode/robocode/Robot.html
 
@@ -14,7 +11,7 @@ import java.awt.Color;
 public class Robobot extends Robot
 {
 	
-	public void run() {
+	public void run() { //go to corner at the beginning then do normal movement
 	
 		setColors(Color.blue,Color.blue,Color.red); // body,gun,radar
 	
@@ -38,7 +35,7 @@ public class Robobot extends Robot
 	 * onScannedRobot: What to do when you see another robot
 	 */	
 
-	public void onScannedRobot(ScannedRobotEvent e) {
+	public void onScannedRobot(ScannedRobotEvent e) { //shoot with power depending on distance from the enemy
 		
 		if(e.getDistance() < 100){
 			fire(Rules.MAX_BULLET_POWER);
@@ -49,13 +46,11 @@ public class Robobot extends Robot
 		}
 		if(e.getDistance() > 200){
 			fire(1);
-		}
-		
-			
+		}	
 	}
 	
 
-	public void navigateSides(){
+	public void navigateSides(){ //moves around the edges
 		double x = getBattleFieldWidth();
 		double y = getBattleFieldHeight();
 		
@@ -69,18 +64,8 @@ public class Robobot extends Robot
 			ahead(x);
 		}
 	}
-		
-				
-
 	
-	
-	public void scan(){
-		for(int i = 0; i < 10; i++){
-			turnRadarLeft(36);
-		}	
-	}
-	
-	public void alignGuntoDirection(double direction){
+	public void alignGuntoDirection(double direction){ //sets the heading of the gun to a direction
 		double var = direction-getGunHeading();
 		if(var >= 180){
 			turnGunLeft(var);
@@ -96,7 +81,7 @@ public class Robobot extends Robot
 		}
 	}
 	
-	public void alignRobottoDirection(double direction){
+	public void alignRobottoDirection(double direction){ //sets the heading of the robot to a direction
 		double var = direction-getHeading();
 		if(var >= 180){
 			turnLeft(var);
